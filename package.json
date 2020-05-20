@@ -1,0 +1,30 @@
+{
+  "name": "hello-express",
+  "version": "0.0.1",
+  "description": "Epic Calculus Project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "browserify": "^16.5.1",
+    "expr-eval": "^2.0.2",
+    "express": "^4.17.1",
+    "mathjs": "^7.0.0"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/hello-express"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ],
+  "devDependencies": {
+    "watchify": "^3.11.1"
+  }
+}
