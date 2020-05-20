@@ -1,0 +1,180 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A cool thing made with Glitch">
+
+    <title>Calculus Calculator</title>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
+    
+    <style>
+      
+      @keyframes grow{
+        from {
+          width:0%;
+        }
+        to {
+          width:30%;
+        }
+      }
+      
+      @keyframes shrink{
+        from {
+          width:30%;
+        }
+        to {
+          width:0%;
+        }
+      }
+      
+      @keyframes moveRight {
+        from {
+          left:0%;
+        }
+        to {
+          left:30%;
+        }
+      }
+      
+      @keyframes moveLeft {
+        from {
+          left:30%;
+        }
+        to {
+          left:0%;
+        }
+      }
+      
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+
+      canvas {
+        width:100%;
+        height:100%;
+      }
+      
+      input[type=textbox] {
+        width:50%;
+        font-family:monospace;
+        font-size:30px;
+        overflow:hidden;
+      }
+      
+      #menuForm {
+        font-family:monospace;
+        font-size:30px;
+        margin:10px;
+        overflow:hidden;
+        display:flex;
+        justify-content:center;
+        flex-direction:column;
+        align-items:center;
+      }
+      
+      #manageMenuButtonDiv {
+        position:absolute;
+        top:7%;
+        left:0%;
+      }
+      
+      #UIControlsDiv {
+        position:absolute;
+        top: 3%;
+        right:1%;
+      }
+      
+      #menuContainer{
+        background-color:#efefef;
+        position:absolute;
+        top:0.2%;
+        left:0%;
+        width:0%;
+        height:99.4%;
+        border: 2px black solid;
+      }
+      
+      .growing {
+        animation: 1s ease-in-out forwards grow;
+      }
+      
+      .shrinking{
+        animation: 1s ease-in-out forwards shrink;
+      }
+      
+      .movingRight {
+        animation: 1s ease-in-out forwards moveRight;
+      }
+      
+      .movingLeft {
+        animation: 1s ease-in-out forwards moveLeft;
+      }
+      
+      .UIButton:hover {
+        background-color: #afafaf;
+      }
+      
+      .UIButton:focus {
+        outline:none;
+      }
+      
+      .roundButton{
+        border-radius:8px;
+      }
+      
+      .UIButton {
+        background-color:#dedede;
+        font-size:26px;
+        color: #696969;
+        cursor:pointer;
+        text-align:center;
+        border:2px #696969 solid;
+        touch-action:manipulation;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div id="manageMenuButtonDiv">
+      <input id="manageMenuButton" type="button" value=">>" class="UIButton roundButton">
+    </div>
+    <div id="UIControlsDiv">
+      <!-- <input id="zoomInButton" type="button" value="+" class="UIButton roundButton">
+      <input id="zoomOutButton" type="button" value="-" class="UIButton roundButton"> -->
+      <input id="settingsButton" type="button" value="⚙" class="UIButton roundButton">
+    </div>
+    <div id="menuContainer" class="normal">
+      <form id="menuForm">
+        <br>
+        <!-- Container divs are required to allow horizontal grouping on a column flexbox -->
+        <div id="equation1Container">
+          Y1: <input id="equation1" type="textbox" class="equation"> <input id="equation1Color" type="color" value="#0000FF">
+          <br><br>
+        </div>
+        <div id="equation2Container">
+          Y2: <input id="equation2" type="textbox" class="equation"> <input id="equation2Color" type="color" value="#FF0000">
+          <br><br>
+        </div>
+        <div id="equation3Container">
+          Y3: <input id="equation3" type="textbox" class="equation"> <input id="equation3Color" type="color" value="#00ff00">
+          <br><br>
+        </div>
+        <div id="bottomMenuButtonsContainer">
+          <input id="clearEquationsButton" type="button" value ="Clear" class="UIButton roundButton">
+          <input id="updateEquationsButton" type="button" value="Update" class="UIButton roundButton">
+        </div>
+      </form>
+    </div>
+    
+    <script src="/bundle.js" defer></script>
+  </body>
+</html>
