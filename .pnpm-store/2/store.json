@@ -886,5 +886,26 @@
 	],
 	"registry.npmjs.org/xtend/4.0.2": [
 		"/rbd/pnpm-volume/f1558f0c-7267-4860-bcfc-0449de2168e1"
+	],
+	"registry.npmjs.org/mathjs-simple-integral/0.1.1": [
+		"/rbd/pnpm-volume/f1558f0c-7267-4860-bcfc-0449de2168e1"
+	],
+	"registry.npmjs.org/mathjs/3.20.2": [
+		"/rbd/pnpm-volume/f1558f0c-7267-4860-bcfc-0449de2168e1"
+	],
+	"registry.npmjs.org/complex.js/2.0.4": [
+		"/rbd/pnpm-volume/f1558f0c-7267-4860-bcfc-0449de2168e1"
+	],
+	"registry.npmjs.org/decimal.js/9.0.1": [
+		"/rbd/pnpm-volume/f1558f0c-7267-4860-bcfc-0449de2168e1"
+	],
+	"registry.npmjs.org/fraction.js/4.0.4": [
+		"/rbd/pnpm-volume/f1558f0c-7267-4860-bcfc-0449de2168e1"
+	],
+	"registry.npmjs.org/tiny-emitter/2.0.2": [
+		"/rbd/pnpm-volume/f1558f0c-7267-4860-bcfc-0449de2168e1"
+	],
+	"registry.npmjs.org/typed-function/0.10.7": [
+		"/rbd/pnpm-volume/f1558f0c-7267-4860-bcfc-0449de2168e1"
 	]
 }

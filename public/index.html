@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A cool thing made with Glitch">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
 
     <title>Calculus Calculator</title>
     
@@ -22,13 +24,13 @@
           width:0%;
         }
         to {
-          width:30%;
+          width:36%;
         }
       }
       
       @keyframes shrink{
         from {
-          width:30%;
+          width:36%;
         }
         to {
           width:0%;
@@ -40,13 +42,13 @@
           left:0%;
         }
         to {
-          left:30%;
+          left:36%;
         }
       }
       
       @keyframes moveLeft {
         from {
-          left:30%;
+          left:36%;
         }
         to {
           left:0%;
@@ -65,16 +67,16 @@
       
       input[type=textbox] {
         width:50%;
-        font-family:monospace;
+        font-family:inherit;
         font-size:30px;
-        overflow:hidden;
+        overflow:scroll;
       }
       
       #menuForm {
-        font-family:monospace;
+        font-family:'Roboto Mono', monospace;
         font-size:30px;
         margin:10px;
-        overflow:hidden;
+        overflow:scroll;
         display:flex;
         justify-content:center;
         flex-direction:column;
@@ -140,6 +142,31 @@
         border:2px #696969 solid;
         touch-action:manipulation;
       }
+      
+      .whisper {
+        font-size:20px;
+      }
+      
+      .hidden {
+        display:none;
+      }
+      
+      .checkbox {
+        width:20px;
+        height:20px;
+        border: 2px black solid;
+      }
+      
+      .inputNumber {
+        width: 50px;
+        height:auto;
+        font-size:20px;
+      }
+      
+      .formSelect {
+        font-size:20px;
+      }
+      
     </style>
   </head>
   
@@ -156,18 +183,72 @@
       <form id="menuForm">
         <br>
         <!-- Container divs are required to allow horizontal grouping on a column flexbox -->
+        <!-- Equations! -->
         <div id="equation1Container">
+          <!-- Equation 1 -->
           Y1: <input id="equation1" type="textbox" class="equation"> <input id="equation1Color" type="color" value="#0000FF">
-          <br><br>
+          <input id="equation1OptionsButton" type="button" class="UIButton roundButton whisper" value="Show Options">
+          <div id="equation1OptionsDiv" class="optionsDiv hidden">
+            <!-- Equation 1 Options -->
+            <span class="whisper">Show Tangent Line: </span><input id="deriv1" type="checkbox" class="checkbox">
+            <br>
+            <span class="whisper"> Integral Mode: </span><input id="integralMode1" type="checkbox" class="checkbox integral"> <span class="whisper"> Bounds: </span><input id="minBound1" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound1" type="number" class="inputNumber" step="any">
+            <br>
+            <span class="whisper">Area = <span id="integralArea1">N/A</span></span>
+            <br>
+            <span class="whisper">Riemann Mode: </span><input id="riemannMode1" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <select id="riemannType1" class="formSelect">
+              <option>Left</option>
+              <option>Right</option>
+              <option>Midpoint</option>
+            </select>
+            <!-- <span class="whisper">Partitions: </span><input id="partitionNumber1" type="number" class="inputNumber" step="any"> -->
+          </div>  
         </div>
+        <br>
+        <!-- Equation 2 -->
         <div id="equation2Container">
           Y2: <input id="equation2" type="textbox" class="equation"> <input id="equation2Color" type="color" value="#FF0000">
-          <br><br>
+          <input id="equation2OptionsButton" type="button" class="UIButton roundButton whisper" value="Show Options">
+          <div id="equation2OptionsDiv" class="optionsDiv hidden">
+            <!-- Equation 2 Options -->
+            <span class="whisper">Show Tangent Line: </span><input id="deriv2" type="checkbox" class="checkbox"><br>
+            <span class="whisper"> Integral Mode: </span> <input id="integralMode2" type="checkbox" class="checkbox integral"> <span class="whisper">Bounds: </span><input id="minBound2" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound2" type="number" class="inputNumber" step="any">
+            <br>
+            <span class="whisper">Area = <span id="integralArea2">N/A</span></span>
+            <br>
+            <span class="whisper">Riemann Mode: </span><input id="riemannMode2" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <select id="riemannType2" class="formSelect">
+              <option>Left</option>
+              <option>Right</option>
+              <option>Midpoint</option>
+            </select>
+            <!-- <span class="whisper">Partitions: </span><input id="partitionNumber2" type="number" class="inputNumber" step="any"> -->
+          </div>  
         </div>
+        <br>
+        <!-- Equation 3 -->
         <div id="equation3Container">
-          Y3: <input id="equation3" type="textbox" class="equation"> <input id="equation3Color" type="color" value="#00ff00">
-          <br><br>
+          Y3: <input id="equation3" type="textbox" class="equation"> <input id="equation3Color" type="color" value="#00aa00">
+          <input id="equation3OptionsButton" type="button" class="UIButton roundButton whisper" value="Show Options">
+          <div id="equation3OptionsDiv" class="optionsDiv hidden">
+            <!-- Equation 3 Options -->
+            <span class="whisper">Show Tangent Line: </span><input id="deriv3" type="checkbox" class="checkbox"><br>
+            <span class="whisper"> Integral Mode: </span> <input id="integralMode3" type="checkbox" class="checkbox integral"> <span class="whisper">Bounds: </span><input id="minBound3" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound3" type="number" class="inputNumber" step="any">
+            <br>
+            <span class="whisper">Area = <span id="integralArea3">N/A</span></span>
+            <br>
+            <span class="whisper">Riemann Mode: </span><input id="riemannMode3" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <select id="riemannType3" class="formSelect">
+              <option>Left</option>
+              <option>Right</option>
+              <option>Midpoint</option>
+            </select>
+            <!-- <span class="whisper">Partitions: </span><input id="partitionNumber3" type="number" class="inputNumber" step="any"> -->
+          </div>  
         </div>
+        <br>
+        <!-- Bottom menu buttons-->
         <div id="bottomMenuButtonsContainer">
           <input id="clearEquationsButton" type="button" value ="Clear" class="UIButton roundButton">
           <input id="updateEquationsButton" type="button" value="Update" class="UIButton roundButton">
