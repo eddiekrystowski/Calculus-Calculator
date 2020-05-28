@@ -11,23 +11,58 @@
 // - add inequality constraints (makeshift piecewise functions)
 // - make UI work/look fit on phone
 // - window/canvas resize
-// - quality slider in settings that changes inc?
 // - put style in css file
 // - add mathjax representation of equations?
-// - fix functions like sqrt
-// - don't let them zoom in so much?
+// - fix functions like sqrt that lag when mouse goes left of them with deriv mode on
+// - calculate and store derivative when update button is pressed
+// - Do error detection/handling of input!!!
+// - Add setting to let people change the increments on the x axis from 5 to something else (not less than 1?)
+// - Add area inbetween functions? see p5js erase and consider drawing axes AFTER plotting functions
+// - Add rainbow colored lines!
+// sfohseiof
 
+const { create, all } = require('mathjs');
+
+console.log('a')
 
 console.log("running script.js");
 var Parser = require("expr-eval").Parser;
 var parser = new Parser();
 
-const math = require('mathjs');
+//requirem math and add integral functionality to it
+const math = create(all);
 
-console.log("watch found watch found  epic");
+
+
+//RIEMANN SUMS!
+//these functions only support equal partitions
+function riemann(type, equation, start, end, partitions){
+  let step = (end-start)/partitions;
+  let total = 0;
+  start = ( type === 'right' ? end : start);
+  end = (type === 'right' ? start : end);
+  for(let x = start; x <= end; x+= step){
+    total += equation.evaluate( (type === 'midpoint' ? x + step/2 : x) )*step;
+  }
+  return total;
+}
+
+//integrate! (definitely)
+//basically identical to a midpoint riemann sum, just with very small step
+//it is explicitly made its own function only for naming purposes
+function integrate (equation, start, end, step) {
+  let total = 0;
+  step = step || 0.01;
+  for (let x = start; x < end; x += step) {
+    total += equation.evaluate(x + step / 2) * step
+  }
+  return total
+}
+
+
 const sketch = p => {
   
-   //JQuery stuff here
+   //Add JQuery event listeners here
   $(document).ready(function(){
       
       //prevent default keyboard behaviors
@@ -60,7 +95,7 @@ const sketch = p => {
         } else if ($menu.hasClass('shrinking')){
           $menu.addClass('normal');
         }
-      })
+      });
 
       //expand/contract menu buttons
       $('#manageMenuButton').on('click', function(){
@@ -87,7 +122,8 @@ const sketch = p => {
       funcs = [];
       //check if input is valid
       for(let i = 0; i < TOTAL_EQUATIONS; i++){
-        let func = $('.equation')[i].value;
+        let func = $('.equation')[i].value.toLowerCase();
+        //DO ERROR DETECTION HERE
         if(func.length > 0){
           funcs[i]= func;
           value_store[func] = {};
@@ -104,6 +140,50 @@ const sketch = p => {
         value_store = {};
         p.clear();
         p.plot();
+      }
+    })
+    
+    $('#equation1OptionsButton').on('click', function(){
+      
+      $('#equation1OptionsDiv').toggleClass('hidden');
+      if($('#equation1OptionsDiv').hasClass('hidden')){
+        $('#equation1OptionsButton').prop('value', "Show Options")
+      } else {
+        $('#equation1OptionsButton').prop('value', "Hide Options")
+      }
+      
+    })
+    
+    $('#equation2OptionsButton').on('click', function(){
+      
+      $('#equation2OptionsDiv').toggleClass('hidden');
+      if($('#equation2OptionsDiv').hasClass('hidden')){
+        $('#equation2OptionsButton').prop('value', "Show Options")
+      } else {
+        $('#equation2OptionsButton').prop('value', "Hide Options")
+      }
+      
+    })
+    
+    $('#equation3OptionsButton').on('click', function(){
+      
+      $('#equation3OptionsDiv').toggleClass('hidden');
+      if($('#equation3OptionsDiv').hasClass('hidden')){
+        $('#equation3OptionsButton').prop('value', "Show Options")
+      } else {
+        $('#equation3OptionsButton').prop('value', "Hide Options")
+      }
+    })
+    
+    $('.checkbox.riemann').change(function(){
+      if($(`#integralMode${this.id.slice(-1)}`).prop('checked') === true){
+        $(`#integralMode${this.id.slice(-1)}`).prop('checked', false);
+      }
+    })
+    
+    $('.checkbox.integral').change(function(){
+      if($(`#riemannMode${this.id.slice(-1)}`).prop('checked') === true){
+        $(`#riemannMode${this.id.slice(-1)}`).prop('checked', false);
       }
     })
     
@@ -148,16 +228,21 @@ const sketch = p => {
     p.background(255);
     p.textSize(16);
     p.textAlign(p.CENTER);
+    p.rectMode(p.CORNERS);
     p.plot();
   };
   
+  p.draw = function(){}
+  
   //shift canvas with mouse drag
   p.mouseDragged = function() {
-    p.clear();
+    //p.clear();
     //console.log('mouse drag')
     xOff += p.mouseX - p.pmouseX;
     yOff += p.mouseY - p.pmouseY;
-    if(p.frameCount % 10 === 0) p.plot();
+    //if(p.frameCount % 1000 === 0) {
+     //p.plot();
+    //}
     //prevent default behaviors
     return false;
   };
@@ -174,6 +259,8 @@ const sketch = p => {
   }
 
   p.plot = function() {
+    let startTime = p.millis()
+    //console.log('plotting');
     //define canvas/view boundaries (what intervals to draw on)
     canvas_left = -p.width / 2 - xOff;
     canvas_right = p.width / 2 - xOff;
@@ -226,6 +313,7 @@ const sketch = p => {
           p.scale(1,-1);
         }
       }
+    
       //draw main axes in BOLD
       p.strokeWeight(3);
       //y-axis
@@ -238,31 +326,123 @@ const sketch = p => {
       //but i didn't want to have to multiply each value by sep_x or sep_y every time.
       //might be easier to do that in the long run idk
       p.scale(1 * sep_x, 1 * sep_y);
-      p.strokeWeight(1 / sep_x);
-
-
+ 
       p.strokeWeight(2/sep_x)
 
       
-      //console.log(xOff, yOff)
-      for (let x = Math.floor((canvas_left)/sep_x); x < Math.ceil((canvas_right)/sep_x); x += inc) {
-        for(const [i,func] of funcs.entries()){
+      let funcsTangent = []
+      //draw tangent line
+      //math.derivative('x^2', 'x').evaluate({x: 4})    // number 8
+      for (let i=0; i < funcs.length; i++) {
+        if(!document.getElementById(`deriv${i+1}`).checked) continue;
+        let x_val = (p.mouseX-xOff-p.width/2)/sep_x;
+        //get the slope
+        let slope = math.derivative(funcs[i], 'x').evaluate({x: x_val});
+        //generate the tangent line with point slope form
+        let tangentLine = `${slope}*(x-${x_val}) + ${funcs[i].evaluate(x_val)}`
+        funcsTangent[i] = (tangentLine);
+      }
+      //plot the function
+      for(const [i,func] of funcs.entries()){
+        //console.log(funcsTangent.entries())
+        for (let x = Math.floor((canvas_left)/sep_x); x < Math.ceil((canvas_right)/sep_x); x += inc) {
+          //make sure the function is not empty
           if(!func) continue;
+          //if the values we are about to plot are not in the value store, calculate and insert them
           if(!value_store[func].hasOwnProperty(x)) value_store[func][x] = func.evaluate(x);
           if(!value_store[func.hasOwnProperty(x+inc)]) value_store[func][x+inc] = func.evaluate(x+inc);
-          let col = document.getElementById(`equation${i+1}Color`).value;
-          p.stroke(p.color(col))
+          let col = p.color(document.getElementById(`equation${i+1}Color`).value);
+          p.stroke(col);
+          p.noFill();
           p.line(x, value_store[func][x], x + inc, value_store[func][x+inc]);
-        }     
+          
+          
+          //If integral mode is on, SHADE!
+          if(document.getElementById(`integralMode${i+1}`).checked){
+            let minBound = Number(document.getElementById(`minBound${i+1}`).value) || Math.floor((canvas_left)/sep_x);
+            let maxBound = Number(document.getElementById(`maxBound${i+1}`).value) || Math.ceil((canvas_right)/sep_x);
+            //swap the values if the minBound is bigger than the maxBound
+            // IF WE ARE CALCULATING AN INTEGRAL HERE THEN * -1
+            let flipped = false;
+            if(minBound > maxBound){
+              let temp = minBound;
+              minBound = maxBound;
+              maxBound = temp;
+              flipped = true;
+            }
+            //add some alpha
+            col = p.color(document.getElementById(`equation${i+1}Color`).value + '30');
+            p.noStroke();
+            p.fill(col);
+            //shade under the curve
+            if(x >= minBound && x <= maxBound){
+              p.rect(x, value_store[func][x], x+inc, 0);
+            }
+          }
+      }  
+        
+      //if integral mode is on, calculate the area!
+      //this is done redundantly outside of the loop because doing this calculation inside the loop is totally unnecessary
+        //since it will always yield the same result every frame
+      if(document.getElementById(`integralMode${i+1}`).checked){
+        //calculate and display integral;
+        //if both bounds are specified
+        let minBound = Number(document.getElementById(`minBound${i+1}`).value) || Math.floor((canvas_left)/sep_x);
+        let maxBound = Number(document.getElementById(`maxBound${i+1}`).value) || Math.ceil((canvas_right)/sep_x);
+        //swap the values if the minBound is bigger than the maxBound
+        // IF WE ARE CALCULATING AN INTEGRAL HERE THEN * -1
+        let flipped = false;
+        if(minBound > maxBound){
+          let temp = minBound;
+          minBound = maxBound;
+          maxBound = temp;
+          flipped = true;
+        }
+        
+        //calculate!
+        if(document.getElementById(`minBound${i+1}`).value && document.getElementById(`maxBound${i+1}`).value){
+          document.getElementById(`integralArea${i+1}`).textContent = integrate(func, minBound, maxBound)* (flipped ? -1 : 1);
+        } else {
+          document.getElementById(`integralArea${i+1}`).textContent = 'N/A'
+        }
+        
       }
+    }
+    
+    //graph the tangent lines
+    for (let x = Math.floor((canvas_left)/sep_x); x < Math.ceil((canvas_right)/sep_x); x += inc) {
+      for(const [i, equation] of funcsTangent.entries()) {
+            //if the equation doesn't exist, skip it
+            if(!equation) continue;
+            let col = document.getElementById(`equation${i+1}Color`).value + '50';
+            p.stroke(p.color(col));
+            p.line(x, equation.evaluate(x), x+inc, equation.evaluate(x+inc));
+      }
+    }
+    
     p.pop();
-  };
+    if(p.frameCount % 45 === 0){
+      //console.log(p.frameCount)
+      console.log(`p.plot() took ${p.millis()-startTime} milliseconds`);
+    }
+  }; //END OF p.plot()
+  
+  setInterval(function(){
+    p.clear();
+    p.plot();
+  },  45);
 };
 
 var myp5 = new p5(sketch);
 console.log(myp5);
 
 String.prototype.evaluate = function(x_value) {
-  return parser.evaluate(this.valueOf(), {x: x_value}); //math.evaluate(this.valueOf(), {x:x_value});
+    try {
+      let output = parser.evaluate(this.valueOf().toLowerCase(), {x: x_value});
+      return output;
+    } catch(error){
+      //console.log(error);
+    }
+     //math.evaluate(this.valueOf(), {x:x_value});
 };
 

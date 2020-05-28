@@ -1,0 +1,42 @@
+{
+	"name": "mathjs-simple-integral",
+	"dist-tags": {
+		"latest": "0.1.1"
+	},
+	"versions": {
+		"0.1.0": {
+			"name": "mathjs-simple-integral",
+			"version": "0.1.0",
+			"dependencies": {
+				"mathjs": "^3.18.1"
+			},
+			"devDependencies": {
+				"chai": "^4.1.2",
+				"mocha": "^4.1.0"
+			},
+			"dist": {
+				"integrity": "sha512-LimG2rscqGPui7wQyifLiMWIHwQZojnGUs7GR8kiJra55Yd/vhrP8aqOaY3wxTneI0cM66pcpSTwZz2YS9qVRQ==",
+				"shasum": "7b16c1fc7d068f9ea278e3bf169ae07e589f3a97",
+				"tarball": "https://registry.npmjs.org/mathjs-simple-integral/-/mathjs-simple-integral-0.1.0.tgz"
+			}
+		},
+		"0.1.1": {
+			"name": "mathjs-simple-integral",
+			"version": "0.1.1",
+			"dependencies": {
+				"mathjs": "^3.18.1"
+			},
+			"devDependencies": {
+				"chai": "^4.1.2",
+				"mocha": "^4.1.0"
+			},
+			"dist": {
+				"integrity": "sha512-g7op1S9kFiSTBWrYWn/C3NqxhycDPD3B9o/VmzpIj8OYzrY95eTiUWYqKEazWu1f1DmV8aCjcsjBGNNMWujldQ==",
+				"shasum": "52b2a130b976e15de02f16f2320dad636892208c",
+				"tarball": "https://registry.npmjs.org/mathjs-simple-integral/-/mathjs-simple-integral-0.1.1.tgz"
+			}
+		}
+	},
+	"modified": "2018-01-13T05:10:29.018Z",
+	"cachedAt": 1590683661385
+}
