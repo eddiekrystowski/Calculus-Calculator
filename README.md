@@ -1,5 +1,5 @@
-#Calculus Calculator
+# Calculus Calculator #
 
-##Graphing
+## Graphing ##
 
-##Calculus
+## Calculus ##
