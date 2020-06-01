@@ -1,5 +1,5 @@
 //have to list p5 variables used here otherwise they will give fake Reference Error */
-/* global createCanvas background point rect ellipse fill stroke noFill noStroke width height colorMode HSB line strokeWeight push pop translate scale frameCount p5 math mouseX pmouseX mouseY pmouseY d*/
+/* global createCanvas background point rect ellipse fill stroke noFill noStroke width height colorMode HSB line strokeWeight push pop translate scale frameCount p5 math mouseX pmouseX mouseY pmouseY d */
 // client-side js, loaded by index.html
 // run by the browser each time the page is loaded
 
@@ -12,14 +12,14 @@
 // - make UI work/look fit on phone
 // - window/canvas resize
 // - put style in css file
-// - add mathjax representation of equations?
 // - fix functions like sqrt that lag when mouse goes left of them with deriv mode on
 // - calculate and store derivative when update button is pressed
 // - Do error detection/handling of input!!!
 // - Add setting to let people change the increments on the x axis from 5 to something else (not less than 1?)
 // - Add area inbetween functions? see p5js erase and consider drawing axes AFTER plotting functions
 // - Add rainbow colored lines!
-// sfohseiof
+// - Add help/about to settings
+// - Add console art!
 
 const { create, all } = require('mathjs');
 
@@ -32,17 +32,59 @@ var parser = new Parser();
 //requirem math and add integral functionality to it
 const math = create(all);
 
+// //workaround to get around verbose logs from expr-eval which tank performance
+// var logger = function() {
+//     var oldConsoleLog = null;
+//     var pub = {};
 
+//     pub.enableLogger =  function enableLogger() {
+//       if(oldConsoleLog == null) return;
+//       window['console']['log'] = oldConsoleLog;
+//     };
+
+//     pub.disableLogger = function disableLogger() {
+//         oldConsoleLog = console.log;
+//         window['console']['log'] = function() {};
+//     };
+  
+//     return pub;
+// }();
+
+const Logger = function(){
+  this.oldConsoleLog = null;
+  
+  this.enableLogger = function(){
+    if(this.oldConsoleLog === null) return;
+    window['console']['log'] = this.oldConsoleLog;
+  }
+  
+  this.disableLogger = function(){
+    this.oldConsoleLog = console.log;
+    window['console']['log'] = function() {};
+  }
+}
+
+const logger = new Logger();
 
 //RIEMANN SUMS!
 //these functions only support equal partitions
 function riemann(type, equation, start, end, partitions){
-  let step = (end-start)/partitions;
+  let step = (end-start)/(partitions);
   let total = 0;
-  start = ( type === 'right' ? end : start);
-  end = (type === 'right' ? start : end);
-  for(let x = start; x <= end; x+= step){
-    total += equation.evaluate( (type === 'midpoint' ? x + step/2 : x) )*step;
+  // let temp = start;
+  start = (type === 'Midpoint' ? start + step/2 : start);
+  // start = (type === 'Right' ? end : start);
+  // end = (type === 'Right' ? temp : end);
+  //for(let x = start; (type === 'Right' ? x <= end : x < (end + (type === "Right" ? step/50 : (type === "Left" ? -step/50 : 0)))); x += step){
+  //  let left_x = (type === 'Midpoint' ? x - step/2 : (type === 'Right' ? x-step : x) );
+  //  this.rect(left_x, equation.evaluate(x), left_x +step, 0);
+  //  total += equation.evaluate( (type === 'Midpoint' ? x + step/2 : x) )*step;
+  //}
+  for(let p = 0; p < partitions; p++){
+    let x = start+p*step;
+    let left_x = (type === 'Midpoint' ? x - step/2 : x);
+    this.rect(left_x, equation.evaluate(x), left_x +step, 0);
+    total += equation.evaluate( (type === 'Midpoint' ? x + step/2 : x) )*step;
   }
   return total;
 }
@@ -56,7 +98,7 @@ function integrate (equation, start, end, step) {
   for (let x = start; x < end; x += step) {
     total += equation.evaluate(x + step / 2) * step
   }
-  return total
+  return total.toFixed(4);
 }
 
 
@@ -124,6 +166,27 @@ const sketch = p => {
       for(let i = 0; i < TOTAL_EQUATIONS; i++){
         let func = $('.equation')[i].value.toLowerCase();
         //DO ERROR DETECTION HERE
+        try {
+          //try to parse function
+          //logger.disableLogger();
+          parser.parse(func);
+          parser.evaluate(func, {x:1});
+        } catch (error){
+          //if there is an error, skip this function and show error message
+          console.log('Error!');
+          //if the function is empty, there is no point in throwing error
+          if(func !== ''){
+            $('.equation').eq(i).css('border', '2px solid red');
+            $(`#error${i+1}`).css('display', 'block');
+          }
+          continue;
+        } //// finally {
+        //  logger.enableLogger();
+        //}
+        console.log('back online')
+        //success!
+        $('.equation').eq(i).css('border', '2px solid black');
+        $(`#error${i+1}`).css('display', 'none');
         if(func.length > 0){
           funcs[i]= func;
           value_store[func] = {};
@@ -213,6 +276,7 @@ const sketch = p => {
   let sep_x =(window.innerWidth / domain) *(window.innerWidth > window.innerHeight ? 1 : window.innerHeight / window.innerWidth);
   let sep_y = (window.innerHeight / range) * (window.innerHeight > window.innerWidth ? 1 : window.innerWidth / window.innerHeight);
 
+  p5.disableFriendlyErrors = true;
   //classic setup function
   p.setup = function() {
     console.log("in setup");
@@ -359,8 +423,11 @@ const sketch = p => {
           
           //If integral mode is on, SHADE!
           if(document.getElementById(`integralMode${i+1}`).checked){
-            let minBound = Number(document.getElementById(`minBound${i+1}`).value) || Math.floor((canvas_left)/sep_x);
-            let maxBound = Number(document.getElementById(`maxBound${i+1}`).value) || Math.ceil((canvas_right)/sep_x);
+            let minBound = document.getElementById(`minBound${i+1}`).value.trim();
+            minBound = (minBound === "" ? Math.floor((canvas_left)/sep_x) : Number(minBound));
+        
+            let maxBound = document.getElementById(`maxBound${i+1}`).value.trim();
+            maxBound = (maxBound === "" ? Math.ceil((canvas_right)/sep_x) : Number(maxBound));
             //swap the values if the minBound is bigger than the maxBound
             // IF WE ARE CALCULATING AN INTEGRAL HERE THEN * -1
             let flipped = false;
@@ -379,7 +446,8 @@ const sketch = p => {
               p.rect(x, value_store[func][x], x+inc, 0);
             }
           }
-      }  
+          
+      } // end of looping through x's by inc  
         
       //if integral mode is on, calculate the area!
       //this is done redundantly outside of the loop because doing this calculation inside the loop is totally unnecessary
@@ -387,8 +455,11 @@ const sketch = p => {
       if(document.getElementById(`integralMode${i+1}`).checked){
         //calculate and display integral;
         //if both bounds are specified
-        let minBound = Number(document.getElementById(`minBound${i+1}`).value) || Math.floor((canvas_left)/sep_x);
-        let maxBound = Number(document.getElementById(`maxBound${i+1}`).value) || Math.ceil((canvas_right)/sep_x);
+        let minBound = document.getElementById(`minBound${i+1}`).value.trim();
+        minBound = (minBound === "" ? Math.floor((canvas_left)/sep_x) : Number(minBound));
+        
+        let maxBound = document.getElementById(`maxBound${i+1}`).value.trim();
+        maxBound = (maxBound === "" ? Math.ceil((canvas_right)/sep_x) : Number(maxBound));
         //swap the values if the minBound is bigger than the maxBound
         // IF WE ARE CALCULATING AN INTEGRAL HERE THEN * -1
         let flipped = false;
@@ -400,13 +471,35 @@ const sketch = p => {
         }
         
         //calculate!
-        if(document.getElementById(`minBound${i+1}`).value && document.getElementById(`maxBound${i+1}`).value){
+        if(document.getElementById(`minBound${i+1}`).value !== '' && document.getElementById(`maxBound${i+1}`).value !== ''){
           document.getElementById(`integralArea${i+1}`).textContent = integrate(func, minBound, maxBound)* (flipped ? -1 : 1);
         } else {
-          document.getElementById(`integralArea${i+1}`).textContent = 'N/A'
+          document.getElementById(`integralArea${i+1}`).textContent = 'N/A';
         }
-        
       }
+      
+      //if Riemann mode is on, shade the rectangles!
+      if(document.getElementById(`riemannMode${i+1}`).checked){
+        console.log('its checked')
+        let minRiemann = Number(document.getElementById(`minRiemann${i+1}`).value.trim());
+        let maxRiemann = Number(document.getElementById(`maxRiemann${i+1}`).value.trim());
+        let partitions = Number(document.getElementById(`partitionNumber${i+1}`).value.trim());
+        let type = document.getElementById(`riemannType${i+1}`).value;
+        let col = document.getElementById(`equation${i+1}Color`).value;
+        p.fill(p.color(col + '20'));
+        p.stroke(p.color(col +'50'));
+        console.log(minRiemann);
+        console.log(maxRiemann);
+        //check to make sure all info is entered
+        if(partitions && partitions >= 0){
+          //calculate riemann and shade it on graph
+          let p_riemann = riemann.bind(p, type, func, minRiemann, maxRiemann, partitions);
+          let total = p_riemann();
+          //calculate!
+            document.getElementById(`riemannArea${i+1}`).textContent = total.toFixed(4);
+        }
+      }
+      
     }
     
     //graph the tangent lines
@@ -441,7 +534,7 @@ String.prototype.evaluate = function(x_value) {
       let output = parser.evaluate(this.valueOf().toLowerCase(), {x: x_value});
       return output;
     } catch(error){
-      //console.log(error);
+      //console.log("Error evaluating function " + this.valueOf() + " : " +error);
     }
      //math.evaluate(this.valueOf(), {x:x_value});
 };
