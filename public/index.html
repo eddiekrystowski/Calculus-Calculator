@@ -3,173 +3,183 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A cool thing made with Glitch">
-    
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A cool thing made with Glitch" />
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
 
     <title>Calculus Calculator</title>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-            integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
-            crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
-    
+
     <style>
-      
-      @keyframes grow{
+      @keyframes grow {
         from {
-          width:0%;
+          width: 0%;
         }
         to {
-          width:36%;
+          width: 36%;
         }
       }
-      
-      @keyframes shrink{
+
+      @keyframes shrink {
         from {
-          width:36%;
+          width: 36%;
         }
         to {
-          width:0%;
+          width: 0%;
         }
       }
-      
+
       @keyframes moveRight {
         from {
-          left:0%;
+          left: 0%;
         }
         to {
-          left:36%;
+          left: 36%;
         }
       }
-      
+
       @keyframes moveLeft {
         from {
-          left:36%;
+          left: 36%;
         }
         to {
-          left:0%;
+          left: 0%;
         }
       }
-      
+
       body {
         margin: 0px;
         padding: 0px;
       }
 
       canvas {
-        width:100%;
-        height:100%;
+        width: 100%;
+        height: 100%;
       }
-      
-      input[type=textbox] {
-        width:50%;
-        font-family:inherit;
-        font-size:30px;
-        overflow:scroll;
+
+      input[type="textbox"] {
+        width: 50%;
+        font-family: inherit;
+        font-size: 30px;
+        overflow: scroll;
       }
-      
+
       #menuForm {
-        font-family:'Roboto Mono', monospace;
-        font-size:30px;
-        margin:10px;
-        overflow:scroll;
-        display:flex;
-        justify-content:center;
-        flex-direction:column;
-        align-items:center;
+        font-family: "Roboto Mono", monospace;
+        font-size: 30px;
+        margin: 10px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
       }
-      
+
       #manageMenuButtonDiv {
-        position:absolute;
-        top:7%;
-        left:0%;
+        position: absolute;
+        top: 7%;
+        left: 0%;
       }
-      
+
       #UIControlsDiv {
-        position:absolute;
+        position: absolute;
         top: 3%;
-        right:1%;
+        right: 1%;
       }
-      
-      #menuContainer{
-        background-color:#efefef;
-        position:absolute;
-        top:0.2%;
-        left:0%;
-        width:0%;
-        height:99.4%;
+
+      #menuContainer {
+        background-color: #efefef;
+        position: absolute;
+        top: 0.2%;
+        left: 0%;
+        width: 0%;
+        height: 99.4%;
         border: 2px black solid;
+        overflow-y:scroll;
       }
-      
+
       .growing {
         animation: 1s ease-in-out forwards grow;
       }
-      
-      .shrinking{
+
+      .shrinking {
         animation: 1s ease-in-out forwards shrink;
       }
-      
+
       .movingRight {
         animation: 1s ease-in-out forwards moveRight;
       }
-      
+
       .movingLeft {
         animation: 1s ease-in-out forwards moveLeft;
       }
-      
+
       .UIButton:hover {
         background-color: #afafaf;
       }
-      
+
       .UIButton:focus {
-        outline:none;
+        outline: none;
       }
-      
-      .roundButton{
-        border-radius:8px;
+
+      .roundButton {
+        border-radius: 8px;
       }
-      
+
       .UIButton {
-        background-color:#dedede;
-        font-size:26px;
+        background-color: #dedede;
+        font-size: 26px;
         color: #696969;
-        cursor:pointer;
-        text-align:center;
-        border:2px #696969 solid;
-        touch-action:manipulation;
+        cursor: pointer;
+        text-align: center;
+        border: 2px #696969 solid;
+        touch-action: manipulation;
       }
-      
+
       .whisper {
-        font-size:20px;
+        font-size: 20px;
       }
-      
+
       .hidden {
-        display:none;
+        display: none;
       }
-      
+
       .checkbox {
-        width:20px;
-        height:20px;
+        width: 20px;
+        height: 20px;
         border: 2px black solid;
       }
-      
+
       .inputNumber {
         width: 50px;
-        height:auto;
-        font-size:20px;
+        height: auto;
+        font-size: 20px;
       }
-      
+
       .formSelect {
-        font-size:20px;
+        font-size: 20px;
       }
       
+      .superWhisper {
+        font-size:15px;
+        color: #8b8b8b;
+      }
+      
+      .equation {
+        border: 2px solid black;
+      }
+      
+      .error {
+        color: red !important;
+        display: none;
+      }
     </style>
   </head>
-  
+
   <body>
     <div id="manageMenuButtonDiv">
       <input id="manageMenuButton" type="button" value=">>" class="UIButton roundButton">
@@ -186,76 +196,125 @@
         <!-- Equations! -->
         <div id="equation1Container">
           <!-- Equation 1 -->
-          Y1: <input id="equation1" type="textbox" class="equation"> <input id="equation1Color" type="color" value="#0000FF">
+          <div id="error1" class="error superWhisper">
+            <p>Error: Invalid equation format!</p>
+            <ul>
+              <li>Just type the expression, no 'y=' is needed.</li>
+              <li>'x' is currently the only supported variable.</li>
+              <li>Multiplication must be done using * like '2*x' and '(x-2)*(x+4)', not '2x'.</li>
+              <li>Functions such as sin must be written with parenthesis like 'sin(x)', not 'sinx'.</li>
+            </ul>
+          </div>
+          Y1: <input id="equation1" type="textbox" class="equation">
+          <input id="equation1Color" type="color" value="#0000FF">
           <input id="equation1OptionsButton" type="button" class="UIButton roundButton whisper" value="Show Options">
           <div id="equation1OptionsDiv" class="optionsDiv hidden">
             <!-- Equation 1 Options -->
             <span class="whisper">Show Tangent Line: </span><input id="deriv1" type="checkbox" class="checkbox">
+            <hr>
+            <span class="whisper"> Integral Mode: </span><input id="integralMode1" type="checkbox" class="checkbox integral"><span class="whisper"> Bounds: </span><input id="minBound1" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound1" type="number" class="inputNumber" step="any">
             <br>
-            <span class="whisper"> Integral Mode: </span><input id="integralMode1" type="checkbox" class="checkbox integral"> <span class="whisper"> Bounds: </span><input id="minBound1" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound1" type="number" class="inputNumber" step="any">
-            <br>
-            <span class="whisper">Area = <span id="integralArea1">N/A</span></span>
-            <br>
-            <span class="whisper">Riemann Mode: </span><input id="riemannMode1" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <span class="whisper">Integral Area = <span id="integralArea1">N/A</span></span>
+            <br> 
+              <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="integral-calculator.com">this website</a> for an exact answer.</span>
+            <hr>
+            <span class="whisper">Riemann Mode:</span><input id="riemannMode1" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
             <select id="riemannType1" class="formSelect">
               <option>Left</option>
               <option>Right</option>
               <option>Midpoint</option>
             </select>
-            <!-- <span class="whisper">Partitions: </span><input id="partitionNumber1" type="number" class="inputNumber" step="any"> -->
-          </div>  
+            <span class="whisper">Partitions: </span><input id="partitionNumber1" type="number" class="inputNumber" step="any">
+            <span class="whisper">From: </span><input id="minRiemann1" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxRiemann1" type="number" class="inputNumber" step="any">
+            <br>
+            <span class="whisper">Riemann Area = <span id="riemannArea1">N/A</span></span>
+            <hr>
+          </div>
         </div>
         <br>
         <!-- Equation 2 -->
         <div id="equation2Container">
-          Y2: <input id="equation2" type="textbox" class="equation"> <input id="equation2Color" type="color" value="#FF0000">
+          <div id="error2" class="error superWhisper">
+            <p>Error: Invalid equation format!</p>
+            <ul>
+              <li>Just type the expression, no 'y=' is needed.</li>
+              <li>'x' is currently the only supported variable.</li>
+              <li>Multiplication must be done using * like '2*x' and '(x-2)*(x+4)', not '2x'.</li>
+              <li>Functions such as sin must be written with parenthesis like 'sin(x)', not 'sinx'.</li>
+            </ul>
+          </div>
+          Y2: <input id="equation2" type="textbox" class="equation">
+          <input id="equation2Color" type="color" value="#FF0000">
           <input id="equation2OptionsButton" type="button" class="UIButton roundButton whisper" value="Show Options">
           <div id="equation2OptionsDiv" class="optionsDiv hidden">
             <!-- Equation 2 Options -->
-            <span class="whisper">Show Tangent Line: </span><input id="deriv2" type="checkbox" class="checkbox"><br>
-            <span class="whisper"> Integral Mode: </span> <input id="integralMode2" type="checkbox" class="checkbox integral"> <span class="whisper">Bounds: </span><input id="minBound2" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound2" type="number" class="inputNumber" step="any">
+            <span class="whisper">Show Tangent Line: </span><input id="deriv2" type="checkbox" class="checkbox">
+            <hr>
+            <span class="whisper"> Integral Mode: </span><input id="integralMode2" type="checkbox" class="checkbox integral"><span class="whisper">Bounds: </span><input id="minBound2" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound2" type="number" class="inputNumber" step="any">
             <br>
-            <span class="whisper">Area = <span id="integralArea2">N/A</span></span>
+            <span class="whisper">Integral Area = <span id="integralArea2">N/A</span></span>
             <br>
-            <span class="whisper">Riemann Mode: </span><input id="riemannMode2" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="integral-calculator.com">this website</a> for an exact answer.</span>
+            <hr>
+            <span class="whisper">Riemann Mode:</span> <input id="riemannMode2" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
             <select id="riemannType2" class="formSelect">
               <option>Left</option>
               <option>Right</option>
               <option>Midpoint</option>
             </select>
-            <!-- <span class="whisper">Partitions: </span><input id="partitionNumber2" type="number" class="inputNumber" step="any"> -->
-          </div>  
+            <span class="whisper">Partitions: </span><input id="partitionNumber2" type="number" class="inputNumber" step="any">
+            <span class="whisper">From: </span><input id="minRiemann2" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxRiemann2" type="number" class="inputNumber" step="any">
+            <br>
+            <span class="whisper">Riemann Area = <span id="riemannArea2">N/A</span></span>
+            <hr>
+          </div>
         </div>
         <br>
         <!-- Equation 3 -->
         <div id="equation3Container">
-          Y3: <input id="equation3" type="textbox" class="equation"> <input id="equation3Color" type="color" value="#00aa00">
+          <div id="error3" class="error superWhisper">
+            <p>Error: Invalid equation format!</p>
+            <ul>
+              <li>Just type the expression, no 'y=' is needed.</li>
+              <li>'x' is currently the only supported variable.</li>
+              <li>Multiplication must be done using * like '2*x' and '(x-2)*(x+4)', not '2x'.</li>
+              <li>Functions such as sin must be written with parenthesis like 'sin(x)', not 'sinx'.</li>
+            </ul>
+          </div>
+          Y3: <input id="equation3" type="textbox" class="equation">
+          <input id="equation3Color" type="color" value="#00aa00">
           <input id="equation3OptionsButton" type="button" class="UIButton roundButton whisper" value="Show Options">
           <div id="equation3OptionsDiv" class="optionsDiv hidden">
             <!-- Equation 3 Options -->
-            <span class="whisper">Show Tangent Line: </span><input id="deriv3" type="checkbox" class="checkbox"><br>
-            <span class="whisper"> Integral Mode: </span> <input id="integralMode3" type="checkbox" class="checkbox integral"> <span class="whisper">Bounds: </span><input id="minBound3" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound3" type="number" class="inputNumber" step="any">
+            <span class="whisper">Show Tangent Line: </span><input id="deriv3" type="checkbox" class="checkbox">
+            <hr>
+            <span class="whisper"> Integral Mode: </span><input id="integralMode3" type="checkbox" class="checkbox integral"><span class="whisper">Bounds: </span><input id="minBound3" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound3" type="number" class="inputNumber" step="any">
             <br>
-            <span class="whisper">Area = <span id="integralArea3">N/A</span></span>
+            <span class="whisper">Integral Area = <span id="integralArea3">N/A</span></span>
             <br>
-            <span class="whisper">Riemann Mode: </span><input id="riemannMode3" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="integral-calculator.com">this website</a> for an exact answer.</span>
+            <hr>
+            <span class="whisper">Riemann Mode:</span><input id="riemannMode3" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
             <select id="riemannType3" class="formSelect">
               <option>Left</option>
               <option>Right</option>
               <option>Midpoint</option>
             </select>
-            <!-- <span class="whisper">Partitions: </span><input id="partitionNumber3" type="number" class="inputNumber" step="any"> -->
-          </div>  
+            <span class="whisper">Partitions: </span><input id="partitionNumber3" type="number" class="inputNumber" step="any">
+            <span class="whisper">From: </span><input id="minRiemann3" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxRiemann3" type="number" class="inputNumber" step="any">
+            <br>
+            <span class="whisper">Riemann Area = <span id="riemannArea3">N/A</span></span>
+            <hr>
+          </div>
         </div>
         <br>
         <!-- Bottom menu buttons-->
         <div id="bottomMenuButtonsContainer">
-          <input id="clearEquationsButton" type="button" value ="Clear" class="UIButton roundButton">
+          <input id="clearEquationsButton" type="button" value="Clear" class="UIButton roundButton">
           <input id="updateEquationsButton" type="button" value="Update" class="UIButton roundButton">
         </div>
       </form>
     </div>
-    
     <script src="/bundle.js" defer></script>
   </body>
 </html>
