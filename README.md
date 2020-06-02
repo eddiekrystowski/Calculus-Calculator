@@ -15,6 +15,7 @@ Hi, thanks for using Calculus Calculator! The two main files of interest here ar
  ### mathjs and expr-eval ###
  Algebra and symbolic mathematics is quite easy for humans, but it is a nightmare for computers. This is why, instead of spending all of our time working on this project by attempting to write an equation parser and then failing miserably, we instead used the mathjs and expr-eval libraries to help us out. These libraries take an equation and turn it into a 'tree' which a computer is able to understand like this:
  ![alt text](https://www.integral-calculator.com/images/xhow-it-works.png.pagespeed.ic.1Sze5Atrg4.webp "Tree Image")
+ 
  To put it into perspective, the library that www.derivative-calculator.com and www.integral-calculator.com use is called 'Maxima', and it is millions of lines long. Such a library was beyond the scope of our project and is quite difficult to even use, so we opted for lighter weight libraries that still get the job done.
  
  ### p5.js ###
