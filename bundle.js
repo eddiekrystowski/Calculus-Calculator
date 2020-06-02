@@ -348,8 +348,11 @@ const sketch = p => {
     })
     
     document.getElementById('defaultCanvas0').addEventListener('touchmove',function(event){
-      xOff += (p.mouseX - p.pmouseX);
-      yOff += (p.mouseY - p.pmouseY);
+      //if they haven't disabled dragging on mobile
+      if(!document.getElementById('disableDragCheckbox').checked){
+        xOff += (p.mouseX - p.pmouseX)*5;
+        yOff += (p.mouseY - p.pmouseY)*5;
+      }
     })
   
     
@@ -486,8 +489,13 @@ const sketch = p => {
         //get the slope at that point
         let slope = math.derivative(funcs[i], 'x').evaluate({x: x_val});
         //generate the tangent line with point slope form
-        let tangentLine = `${slope}*(x-${x_val}) + ${funcs[i].evaluate(x_val)}`
+        let tangentLine = `${slope}*(x-${x_val}) + ${funcs[i].evaluate(x_val)}`;
+        //add the tangent line equation to the array
         funcsTangent[i] = (tangentLine);
+        
+        //display slope and equation in menu. 
+        document.getElementById(`slope${i+1}`).textContent = slope.toFixed(4);
+        document.getElementById(`tangentEquation${i+1}`).textContent = 'y = ' + `${slope.toFixed(4)}*(x-${x_val.toFixed(4)}) + ${funcs[i].evaluate(x_val).toFixed(4)}`;
       }
     
       //plot the functions
@@ -652,8 +660,6 @@ String.prototype.evaluate = function(x_value) {
       return undefined;
     }
 };
-
-
 },{"expr-eval":5,"mathjs":883}],2:[function(require,module,exports){
 /**
  * @license Complex.js v2.0.11 11/02/2016

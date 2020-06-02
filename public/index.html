@@ -177,6 +177,18 @@
         font-family: "Roboto Mono", monospace;
       }
       
+      #disableDragSpan {
+        position:absolute;
+        right:0px;
+        font-size:30px;
+        color:#5b5b5b;
+        display:none;
+      }
+      
+      #disableDragCheckbox {
+        transform: scale(2);
+      }
+      
       .growing {
         animation: 1s ease-in-out forwards grow;
       }
@@ -320,7 +332,7 @@
         
         #manageMenuButtonDiv {
           position: absolute;
-          top: 10%;
+          top: 15%;
           left: 0%;
           z-index:1;
         }
@@ -355,6 +367,10 @@
           color:black;
         }
         
+        #disableDragSpan {
+          display:inline;
+        }
+        
         .goto {
           width: 30px !important;
           height: 15px !important;
@@ -376,6 +392,8 @@
       <input id="zoomOutButton" type="button" value="-" class="UIButton roundButton"> -->
       <span id="gotoSpan" class="superWhisper">Go to x: <input id= "gotoX" type="number" class="goto inputNumber" step="any"> y: <input id="gotoY" type="number" class="goto inputNumber" step="any"></span>
       <input id="helpButton" type="button" value="?" class="UIButton roundButton">
+      <br>
+      <span id="disableDragSpan">Disable drag: <input id="disableDragCheckbox" type="checkbox"></span>
     </div>
     <div id="helpContainer">
       <div id="helpExitButtonContainer">
@@ -388,7 +406,8 @@
         <p class="instructions">
           This website allows you to graph up to 3 functions in whatever color you like, and examine their graphs as well as visualize 
           calculus concepts! This website requires some graphical computational power, so if you are viewing this on a Chromebook 
-          and would like a somewhat smoother experience, consider viewing the website on your phone (portrait mode is best).
+          and would like a somewhat smoother experience, consider viewing the website on your phone (portrait mode is best). It isn't as pretty
+          and still doesn't run perfectly, but it gets the job done!
           <br><br>
           This project is not entirely complete, as lots of functionality such as symbolic differentiation/integration and accurately 
           graphing vertical asymptotes require more time than we had, but overall we think you will like it!
@@ -457,6 +476,11 @@
           Calculus-Calculator does not currently support symbolic differentiation, but we do have something cooler! By checking the Tangent 
           Line Mode checkbox, the tangent line will follow your mouse horizontally, allowing you to see what happens as you slide the line
           through the equation. (Try this on wavy functions like sin(x)! or 10*sin(x/10) if you want it to be scaled up larger)
+          <br><br>
+          Also, we will calculate and show you the slope of the tangent line as well as the equation of the tangent line as you go.
+          <br><br>
+          For mobile devices, there should be a checkbox in the top right of the graph that says 'Disable drag'. For a better experience using
+          Tangent Line mode, be sure to check this box otherwise the graph will shift while you are moving the line! :(
         </p>
         <h3>
           Integral Mode
@@ -519,6 +543,10 @@
           <div id="equation1OptionsDiv" class="optionsDiv hidden">
             <!-- Equation 1 Options -->
             <span class="whisper">Show Tangent Line: </span><input id="deriv1" type="checkbox" class="checkbox">
+            <br>
+            <span class="whisper">Slope: </span><span id="slope1" class="whisper"></span>
+            <br>
+            <span class="whisper">Equation: </span><span id="tangentEquation1" class="whisper"></span>
             <hr>
             <span class="whisper"> Integral Mode: </span><input id="integralMode1" type="checkbox" class="checkbox integral">
             <br>
@@ -563,6 +591,10 @@
           <div id="equation2OptionsDiv" class="optionsDiv hidden">
             <!-- Equation 2 Options -->
             <span class="whisper">Show Tangent Line: </span><input id="deriv2" type="checkbox" class="checkbox">
+            <br>
+            <span class="whisper">Slope: </span><span id="slope2" class="whisper"></span>
+            <br>
+            <span class="whisper">Equation: </span><span id="tangentEquation2" class="whisper"></span>
             <hr>
             <span class="whisper"> Integral Mode: </span><input id="integralMode2" type="checkbox" class="checkbox integral">
             <br>
@@ -607,6 +639,10 @@
           <div id="equation3OptionsDiv" class="optionsDiv hidden">
             <!-- Equation 3 Options -->
             <span class="whisper">Show Tangent Line: </span><input id="deriv3" type="checkbox" class="checkbox">
+            <br>
+            <span class="whisper">Slope: </span><span id="slope3" class="whisper"></span>
+            <br>
+            <span class="whisper">Equation: </span><span id="tangentEquation3" class="whisper"></span>
             <hr>
             <span class="whisper"> Integral Mode: </span><input id="integralMode3" type="checkbox" class="checkbox integral">
             <br>
