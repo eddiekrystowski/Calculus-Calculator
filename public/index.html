@@ -9,6 +9,7 @@
     <meta name="description" content="A cool thing made with Glitch" />
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://freepngimg.com/save/54489-calculator-png-image-high-quality/720x720" rel="icon">
 
     <title>Calculus Calculator</title>
 
@@ -16,6 +17,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
 
     <style>
+      
+      /* For anything bigger than phones */
+      
       @keyframes grow {
         from {
           width: 0%;
@@ -61,12 +65,31 @@
         width: 100%;
         height: 100%;
       }
-
+      
+      h1 {
+        font-size:60px;
+        color: black;
+      }
+      
+      h2 {
+        font-size:40px;
+        color: #444444;
+      }
+      
+      h3 {
+        color:#555555;
+        font-size:28px;
+      }
       input[type="textbox"] {
         width: 50%;
         font-family: inherit;
         font-size: 30px;
         overflow: scroll;
+      }
+      
+      strong {
+        font-weight: 900;
+        color:black;
       }
 
       #menuForm {
@@ -83,12 +106,21 @@
         position: absolute;
         top: 7%;
         left: 0%;
+        height:20%;
       }
 
+      #manageMenuButton {
+        height: 100%;
+      }
       #UIControlsDiv {
         position: absolute;
         top: 3%;
         right: 1%;
+      }
+      
+      #gotoSpan  {
+        font-size:30px;
+        color: #5b5b5b;
       }
 
       #menuContainer {
@@ -101,7 +133,50 @@
         border: 2px black solid;
         overflow-y:scroll;
       }
-
+      
+      #helpButton {
+        width:50px;
+        height:50px;
+        font-size:34px;
+        margin-left:10px;
+      }
+      
+      #helpContainer {
+        position:absolute;
+        top:10%;
+        left:10%;
+        width:80%;
+        height:80%;
+        background-color: #efefef;
+        border: 2px solid black;
+        z-index: 1;
+        padding:10px;
+        overflow-x:wrap;
+        overflow-y: scroll;
+      }
+      
+      #helpExitButton {
+        position:absolute;
+        right:0%;
+        top:0%;
+        font-size:100px;
+        border:none;
+        color:gray;
+        cursor:pointer;
+      }
+      
+      #helpExitButton:hover {
+        color:black;
+      }
+      
+      #helpExitButton:focus{
+        outline:none;
+      }
+      
+      #helpContentContainer {
+        font-family: "Roboto Mono", monospace;
+      }
+      
       .growing {
         animation: 1s ease-in-out forwards grow;
       }
@@ -177,6 +252,118 @@
         color: red !important;
         display: none;
       }
+      
+      .goto {
+        width: 60px !important;
+        height: 30px !important;
+        border: 1px solid black;
+      }
+      
+      .instructions {
+        font-size:20px;
+      }
+      
+      /* For phones */
+      
+      @media only screen and (max-width: 600px){
+        
+        @keyframes grow {
+          from {
+            width: 0%;
+          }
+          to {
+            width: 80%;
+          }
+        }
+
+        @keyframes shrink {
+          from {
+            width: 80%;
+          }
+          to {
+            width: 0%;
+          }
+        }
+
+        @keyframes moveRight {
+          from {
+            left: 0%;
+          }
+          to {
+            left: 80%;
+          }
+        }
+
+        @keyframes moveLeft {
+          from {
+            left: 80%;
+          }
+          to {
+            left: 0%;
+          }
+        }
+        
+        canvas {
+          position:relative;
+          z-index:0;
+          touch-action: none;
+        }
+        
+        h1 {
+          font-size:40px;
+        }
+        
+        #gotoSpan  {
+          font-size:20px;
+          color: #000000;
+        }
+        
+        #manageMenuButtonDiv {
+          position: absolute;
+          top: 10%;
+          left: 0%;
+          z-index:1;
+        }
+        
+        #menuContainer {
+          background-color: #efefef;
+          position: absolute;
+          top: 0.2%;
+          left: 0%;
+          width: 0%;
+          height: 99.4%;
+          border: 2px black solid;
+          overflow-y:scroll;
+          z-index:2;
+        }
+        
+        #UIControlsDiv {
+          position: absolute;
+          top: 3%;
+          right: 1%;
+          z-index: 1;
+        }
+        
+        #helpButton {
+          text-align:center;
+          margin:0px;
+        }
+
+        #helpExitButton {
+          font-size:30px;
+          background-color:gray;
+          color:black;
+        }
+        
+        .goto {
+          width: 30px !important;
+          height: 15px !important;
+          border: 1px solid black;
+        }
+        
+        
+      }
+      
     </style>
   </head>
 
@@ -187,8 +374,129 @@
     <div id="UIControlsDiv">
       <!-- <input id="zoomInButton" type="button" value="+" class="UIButton roundButton">
       <input id="zoomOutButton" type="button" value="-" class="UIButton roundButton"> -->
-      <input id="settingsButton" type="button" value="⚙" class="UIButton roundButton">
+      <span id="gotoSpan" class="superWhisper">Go to x: <input id= "gotoX" type="number" class="goto inputNumber" step="any"> y: <input id="gotoY" type="number" class="goto inputNumber" step="any"></span>
+      <input id="helpButton" type="button" value="?" class="UIButton roundButton">
     </div>
+    <div id="helpContainer">
+      <div id="helpExitButtonContainer">
+        <input id="helpExitButton" type="button" value="X">
+      </div>
+      <div id="helpContentContainer">
+        <h1>
+          Welcome to Calculus-Calculator!
+        </h1>
+        <p class="instructions">
+          This website allows you to graph up to 3 functions in whatever color you like, and examine their graphs as well as visualize 
+          calculus concepts! This website requires some graphical computational power, so if you are viewing this on a Chromebook 
+          and would like a somewhat smoother experience, consider viewing the website on your phone (portrait mode is best).
+          <br><br>
+          This project is not entirely complete, as lots of functionality such as symbolic differentiation/integration and accurately 
+          graphing vertical asymptotes require more time than we had, but overall we think you will like it!
+          <br><br>
+          If for some reason you want to view the source code, and get an explanation of how this was done, you can find it here:
+          <a href="https://github.com/eddiekrystowski/Calculus-Calculator" target="_blank">https://github.com/eddiekrystowski/Calculus-Calculator</a>
+        </p>
+        <h1>
+          Instructions
+        </h1>
+        <h2>
+          Graphing
+        </h2>
+        <h3>
+          Equations
+        </h3>
+        <p class="instructions">
+          First, press the button on the left side of the screen with the two '&gt&gt' arrows.
+          <br><br>
+          You can graph up to 3 equations at once, but you don't need to do them in any order. For example, you could graph Y1 and Y3 but not Y2,
+          it doesn't matter.
+          <br><br>
+          When you are done writing your equation, click the 'Update' button at the bottom of the menu! We will check your equation for errors and
+          then graph it if it's good to go. Also, when you enter your equation, there are a few guidelines to remember:
+        </p>
+        <ul class="instructions">
+            <li>Just type the expression, no 'y=' is needed.</li>
+            <li>'x' is currently the only supported variable.</li>
+            <li>Multiplication must be done using * like '2*x' and '(x-2)*(x+4)', not '2x'.</li>
+            <li>Functions such as sin must be written with parenthesis like 'sin(x)', not 'sinx'.</li>
+            <li>Currently, functions using e^x can only have e as the base, for example you <strong>can't</strong> do (2+e)^x</li>
+            <li>Functions with vertical asymptotes such as tan(x) will look strange. This is due to how this website graphs functions
+                by connecting points on the graph with consecutive lines to make the shape of the graph. As such, when it comes across
+                a vertical asymptote, it will simply connect a line across it.</li>
+        </ul>
+          <h3>
+            Color
+          </h3>
+        <p class="instructions">
+            To change the color of your graph, click on the rectangle to the right of the graph that is shaded with the current color
+            of that equation. A color wheel picker will then pop up on the screen, and you can pick your color using that tool. You do NOT
+            need to press the 'Update' button for your color change to take effect.
+        </p>
+        <h3>
+          Goto
+        </h3>
+        <p class="instructions">
+          Tired of scrolling to y=1000? In order to increase performance, we decided to not allow zooming out. However, in the top right of
+          the graph where it says 'Goto x:  y:  ', you can jump around the graph to whatever point you want! Simply press enter (or return on
+          a phone) after typing in your destination in either box, and you will be taken there.
+          <br><br>
+          Note: If you want to maintain your current x position but want to jump up to y=1000, leave the 'x' field blank! The same works for
+          maintaining y position when jumping, you can leave the 'y' field blank.
+        </p>
+        <h2>
+          Calculus
+        </h2>
+        <p class="instructions">
+          Of course, this wouldn't be a Calculus-Calculator without any calculus! Press 'Show Options' next to any equation you have entered
+          to get started.
+        </p>
+        <h3>
+          Tangent Line Mode
+        </h3>
+        <p class="instructions">
+          Calculus-Calculator does not currently support symbolic differentiation, but we do have something cooler! By checking the Tangent 
+          Line Mode checkbox, the tangent line will follow your mouse horizontally, allowing you to see what happens as you slide the line
+          through the equation. (Try this on wavy functions like sin(x)! or 10*sin(x/10) if you want it to be scaled up larger)
+        </p>
+        <h3>
+          Integral Mode
+        </h3>
+        <p class="instructions">
+          Integral Mode allows you to visualize the area under the graph indefinitely, or over a certain range. The first bound you enter will
+          be the lower bound, and the second will be the upper bound. If you like to get tricky and put a larger value for the lower bound
+          that is fine too! With integral mode checked on, we will automatically calculate the area defined by the range provided, and take
+          flipping the limits into account. Keep in mind that in order to keep graphics flowing as smoothly as possible at all times, 
+          we aren't able to be incredibly accurate with the definite integral calculation, however it will usually only be a fraction off the
+          real answer. For an exact answer, go to everyone's favorite 
+          <a href="//www.integral-calculator.com" target="_blank">www.integral-calculator.com</a>.
+        </p>
+        <h3>
+          Riemann Mode
+        </h3>
+        <p class="instructions">
+          Riemann Mode allows you to visualize what the Riemann sum on a function looks like. This mode supports all three types of Riemann
+          sums: left, right, and midpoint. Also, since Riemann sums don't require high precision, the area calculate will be entirely accurate!
+          <br><br>
+          To start, check the Riemann mode checkbox. Then, enter how many partitions you want to be calculated, what type of Riemann sum,
+          and over what interval, and we handle the rest!
+          <br><br>
+          Currently, only equal size partitions are supported.
+        </p>
+        <hr>
+        <p class="instructions">
+          We hope you enjoy this website and that you find it useful, and we apologize if there are any bugs! If anything is acting funky and
+          seems like it isn't working how it is supposed to, feel free to let us know. There was simply not enough time to add all the features
+          we had hoped for, but we very well may add them later. Any feedback would be greatly appreciated, as we have never done anything like this
+          before! Have fun! 
+          <hr>
+          To close this menu, scroll up and click the 'X' at the top right. You can reopen this menu at any time by pressing the '?' 
+          button in the top right of the graph.
+        </p>
+          
+        
+      </div>
+    </div>
+    
     <div id="menuContainer" class="normal">
       <form id="menuForm">
         <br>
@@ -212,19 +520,25 @@
             <!-- Equation 1 Options -->
             <span class="whisper">Show Tangent Line: </span><input id="deriv1" type="checkbox" class="checkbox">
             <hr>
-            <span class="whisper"> Integral Mode: </span><input id="integralMode1" type="checkbox" class="checkbox integral"><span class="whisper"> Bounds: </span><input id="minBound1" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound1" type="number" class="inputNumber" step="any">
+            <span class="whisper"> Integral Mode: </span><input id="integralMode1" type="checkbox" class="checkbox integral">
+            <br>
+            <span class="whisper">Bounds: </span><input id="minBound1" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound1" type="number" class="inputNumber" step="any">
             <br>
             <span class="whisper">Integral Area = <span id="integralArea1">N/A</span></span>
             <br> 
-              <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="integral-calculator.com">this website</a> for an exact answer.</span>
+              <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="//www.integral-calculator.com" target="_blank">this website</a> for an exact answer.</span>
             <hr>
-            <span class="whisper">Riemann Mode:</span><input id="riemannMode1" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <span class="whisper">Riemann Mode:</span><input id="riemannMode1" type="checkbox" class="checkbox riemann"> 
+            <br>
+            <span class="whisper">Type: </span>
             <select id="riemannType1" class="formSelect">
               <option>Left</option>
               <option>Right</option>
               <option>Midpoint</option>
             </select>
+            <br>
             <span class="whisper">Partitions: </span><input id="partitionNumber1" type="number" class="inputNumber" step="any">
+            <br>
             <span class="whisper">From: </span><input id="minRiemann1" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxRiemann1" type="number" class="inputNumber" step="any">
             <br>
             <span class="whisper">Riemann Area = <span id="riemannArea1">N/A</span></span>
@@ -250,19 +564,25 @@
             <!-- Equation 2 Options -->
             <span class="whisper">Show Tangent Line: </span><input id="deriv2" type="checkbox" class="checkbox">
             <hr>
-            <span class="whisper"> Integral Mode: </span><input id="integralMode2" type="checkbox" class="checkbox integral"><span class="whisper">Bounds: </span><input id="minBound2" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound2" type="number" class="inputNumber" step="any">
+            <span class="whisper"> Integral Mode: </span><input id="integralMode2" type="checkbox" class="checkbox integral">
+            <br>
+            <span class="whisper">Bounds: </span><input id="minBound2" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound2" type="number" class="inputNumber" step="any">
             <br>
             <span class="whisper">Integral Area = <span id="integralArea2">N/A</span></span>
             <br>
-            <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="integral-calculator.com">this website</a> for an exact answer.</span>
+            <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="//www.integral-calculator.com" target="_blank">this website</a> for an exact answer.</span>
             <hr>
-            <span class="whisper">Riemann Mode:</span> <input id="riemannMode2" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <span class="whisper">Riemann Mode:</span> <input id="riemannMode2" type="checkbox" class="checkbox riemann">
+            <br>
+            <span class="whisper">Type: </span>
             <select id="riemannType2" class="formSelect">
               <option>Left</option>
               <option>Right</option>
               <option>Midpoint</option>
             </select>
+            <br>
             <span class="whisper">Partitions: </span><input id="partitionNumber2" type="number" class="inputNumber" step="any">
+            <br>
             <span class="whisper">From: </span><input id="minRiemann2" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxRiemann2" type="number" class="inputNumber" step="any">
             <br>
             <span class="whisper">Riemann Area = <span id="riemannArea2">N/A</span></span>
@@ -288,19 +608,25 @@
             <!-- Equation 3 Options -->
             <span class="whisper">Show Tangent Line: </span><input id="deriv3" type="checkbox" class="checkbox">
             <hr>
-            <span class="whisper"> Integral Mode: </span><input id="integralMode3" type="checkbox" class="checkbox integral"><span class="whisper">Bounds: </span><input id="minBound3" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound3" type="number" class="inputNumber" step="any">
+            <span class="whisper"> Integral Mode: </span><input id="integralMode3" type="checkbox" class="checkbox integral">
+            <br>
+            <span class="whisper">Bounds: </span><input id="minBound3" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxBound3" type="number" class="inputNumber" step="any">
             <br>
             <span class="whisper">Integral Area = <span id="integralArea3">N/A</span></span>
             <br>
-            <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="integral-calculator.com">this website</a> for an exact answer.</span>
+            <span class="superWhisper">Note: In order to save on computing power to allow for smooth graphics, Integral Area is only an estimate. Use <a href="//www.integral-calculator.com" target="_blank">this website</a> for an exact answer.</span>
             <hr>
-            <span class="whisper">Riemann Mode:</span><input id="riemannMode3" type="checkbox" class="checkbox riemann"> <span class="whisper">Type: </span>
+            <span class="whisper">Riemann Mode:</span><input id="riemannMode3" type="checkbox" class="checkbox riemann">
+            <br>
+            <span class="whisper">Type: </span>
             <select id="riemannType3" class="formSelect">
               <option>Left</option>
               <option>Right</option>
               <option>Midpoint</option>
             </select>
+            <br>
             <span class="whisper">Partitions: </span><input id="partitionNumber3" type="number" class="inputNumber" step="any">
+            <br>
             <span class="whisper">From: </span><input id="minRiemann3" type="number" class="inputNumber" step="any"><span class="whisper"> to </span><input id="maxRiemann3" type="number" class="inputNumber" step="any">
             <br>
             <span class="whisper">Riemann Area = <span id="riemannArea3">N/A</span></span>
