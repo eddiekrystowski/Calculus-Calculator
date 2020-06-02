@@ -590,8 +590,8 @@ const sketch = p => {
           //get the bounds
           let minRiemann = Number(document.getElementById(`minRiemann${i+1}`).value.trim());
           let maxRiemann = Number(document.getElementById(`maxRiemann${i+1}`).value.trim());
-          //get the partitions
-          let partitions = Number(document.getElementById(`partitionNumber${i+1}`).value.trim());
+          //get the partitions and round down
+          let partitions = Math.floor(Number(document.getElementById(`partitionNumber${i+1}`).value.trim()));
           //get the type
           let type = document.getElementById(`riemannType${i+1}`).value;
           //get the color
