@@ -71,9 +71,9 @@ function riemann(type, equation, start, end, partitions){
     //we cheat and draw all rectangles from left to right even if it is a right Riemann sum
     let left_x = (type === 'Midpoint' ? x - step/2 : x);
     //draw the rectangle
-    this.rect(left_x, equation.evaluate(x), left_x +step, 0);
+    this.rect(left_x , equation.evaluate( (type==="Right" ? x+step : x) ), left_x +step, 0);
     //add area to the total
-    total += equation.evaluate( (type === 'Midpoint' ? x + step/2 : x) )*step;
+    total += equation.evaluate( (type === 'Midpoint' ? x : (type === "Right" ? x+step : x)) )*step;
   }
   return total;
 }
